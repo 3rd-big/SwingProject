@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Label;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -43,6 +45,7 @@ public class ProjectMainTest extends JFrame {
 
 	private static JPanel contentPane;
 	private static JPanel Main_contentPanel;
+	private static JPanel currentRightPanel; // [2차 추가]
 	private JTable table;
 	private JScrollPane scrollPane; // 테이블 스크롤바 자동으로 생성되게 하기
 
@@ -89,6 +92,12 @@ public class ProjectMainTest extends JFrame {
 	public JPanel getContentPane() {
 		return contentPane;
 	}
+	
+	// [2차 추가]
+	public void RightPanel(JPanel rightPanel) {
+		currentRightPanel = rightPanel;
+		contentPane.add(currentRightPanel);
+	}
 
 	ProjectMainTest() {
 
@@ -116,14 +125,22 @@ public class ProjectMainTest extends JFrame {
 		navPanel.add(BrandColumn);
 
 		JButton column1 = new JButton("Project Register");
-
 		column1.setForeground(Color.WHITE);
 		column1.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		column1.setBackground(new Color(85, 65, 118));
 		column1.setBounds(0, 158, 185, 44);
 		column1.setBorderPainted(false);
 		column1.setFocusPainted(false);
-
+		// [2차 추가]
+		column1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println("프로젝트 등록 버튼");
+				Main_contentPanel.setVisible(false);
+				registertestpage SeonjeongRegisterPanel = new registertestpage();
+				RightPanel(SeonjeongRegisterPanel.viewRegister());
+			}
+		}); // 여기까지
 		navPanel.add(column1);
 
 		JButton column2 = new JButton("Review");

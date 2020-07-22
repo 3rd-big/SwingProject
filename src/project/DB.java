@@ -229,7 +229,66 @@ public class DB {
 		}
 
 	}
+	
+	public String findUserID(String inputName, String inputEmail) {
 
+		String userID = null;
+		
+		String findIdQuery = "select s_user_id from tb_user_info where s_user_name = '" + inputName + "' "
+							+ "AND s_user_email = '" + inputEmail + "'";
+
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(findIdQuery);) {
+			while (rs.next()) {
+				userID = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		
+		return userID;
+	}
+	
+	public String findUserPassword(String inputId, String inputEmail) {
+		String userPassword = null;
+		String userTmpPassword = null;
+		
+		String findPasswordQuery = "select * from tb_user_info where s_user_id = '" + inputId + "' "
+							+ "AND s_user_email = '" + inputEmail + "'";
+
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(findPasswordQuery);) {
+			while (rs.next()) {
+				userPassword = rs.getString(3);
+				userTmpPassword = rs.getString(10);
+				if(userTmpPassword.equals("1")) {
+					return userPassword;
+				}else {
+					return userTmpPassword;
+				}
+				
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return null;
+
+	}
+	
 	public boolean hasIdCheck(String S_USER_ID) {
 		if (inputId.equals(S_USER_ID)) {
 			return true;
@@ -245,4 +304,5 @@ public class DB {
 			return false;
 		}
 	}
+
 }

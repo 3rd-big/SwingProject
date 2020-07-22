@@ -31,20 +31,30 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 
 public class App {
 	JFrame frame = new JFrame("세바기");
 
 	static private JPanel contentPane;
 	static private JPanel currentRightPanel;
-	static private JTextField inputId;
-	static private JPasswordField inputPassword;
+	
+	static private JTextField inputIdSignIn;
+	static private JPasswordField inputPasswordSignIn;
+	
 	static private JTextField inputNameSignUp;
 	static private JTextField inputIdSignUp;
 	static private JTextField inputPasswordSignUp;
 	static private JTextField inputEmailSignUp;
 	static private JTextField inputPhoneSignUp;
 	static private JTextField inputAddressSignUp;
+	
+	static private JTextField inputNameFindId;
+	static private JTextField inputEmailFindId;
+	
+	static private JTextField inputIdFindPassword;
+	static private JTextField inputEmailFindPassword;
+	
 	
 	App(){
 		DB sessionInitialize = new DB();
@@ -82,6 +92,7 @@ public class App {
 		navPanel.add(BrandColumn);
 
 		RightPanel(viewSignIn());
+		
 
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null); // 중앙 배치
@@ -107,12 +118,9 @@ public class App {
 		RegisterButton.setBounds(398, 498, 276, 11);
 		RegisterButton.setBackground(SystemColor.control);
 		RegisterButton.setBorderPainted(false);
-		RegisterButton
-				.setIcon(new ImageIcon("./image/RegisterButtonBefore.png"));
-		RegisterButton.setSelectedIcon(
-				new ImageIcon("./image/RegisterButtonBefore.png"));
-		RegisterButton.setPressedIcon(
-				new ImageIcon("./image/RegisterButtonAfter.png"));
+		RegisterButton.setIcon(new ImageIcon("./image/RegisterButtonBefore.png"));
+		RegisterButton.setSelectedIcon(new ImageIcon("./image/RegisterButtonBefore.png"));
+		RegisterButton.setPressedIcon(new ImageIcon("./image/RegisterButtonAfter.png"));
 		RegisterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				signInPanel.setVisible(false);
@@ -127,39 +135,39 @@ public class App {
 		signInFormPanel.setBounds(400, 89, signInFormPanel.getWidth(), signInFormPanel.getHeight());
 		signInPanel.add(signInFormPanel);
 
-		inputPassword = new JPasswordField();
-		inputPassword.setForeground(SystemColor.controlDkShadow);
-		inputPassword.setBounds(81, 219, 143, 21);
-		signInFormPanel.add(inputPassword);
-		inputPassword.setText("password");
-		inputPassword.setBorder(null);
-		inputPassword.setBackground(SystemColor.control);
-		inputPassword.addMouseListener(new MouseAdapter() {
+		inputPasswordSignIn = new JPasswordField();
+		inputPasswordSignIn.setForeground(SystemColor.controlDkShadow);
+		inputPasswordSignIn.setBounds(81, 219, 143, 21);
+		signInFormPanel.add(inputPasswordSignIn);
+		inputPasswordSignIn.setText("password");
+		inputPasswordSignIn.setBorder(null);
+		inputPasswordSignIn.setBackground(SystemColor.control);
+		inputPasswordSignIn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// inputPassword 16자 제한
-				inputPassword.setDocument(new JTextFieldLimit(16));
-				inputPassword.setText("");
+				inputPasswordSignIn.setDocument(new JTextFieldLimit(16));
+				inputPasswordSignIn.setText("");
 			}
 		});
 
-		inputId = new JTextField();
-		inputId.setForeground(SystemColor.controlDkShadow);
-		inputId.setBounds(81, 150, 143, 25);
-		signInFormPanel.add(inputId);
-		inputId.setBorder(null);
-		inputId.setText("아이디 입력");
-		inputId.setFont(new Font("맑은 고딕", Font.BOLD, 14));
-		inputId.setBackground(SystemColor.control);
-		inputId.addMouseListener(new MouseAdapter() {
+		inputIdSignIn = new JTextField();
+		inputIdSignIn.setForeground(SystemColor.controlDkShadow);
+		inputIdSignIn.setBounds(81, 150, 143, 25);
+		signInFormPanel.add(inputIdSignIn);
+		inputIdSignIn.setBorder(null);
+		inputIdSignIn.setText("아이디 입력");
+		inputIdSignIn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+		inputIdSignIn.setBackground(SystemColor.control);
+		inputIdSignIn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// inputId 10자 제한
-				inputId.setDocument(new JTextFieldLimit(10));
-				inputId.setText("");
+				inputIdSignIn.setDocument(new JTextFieldLimit(10));
+				inputIdSignIn.setText("");
 			}
 		});
-
+		
 		// LogInButton 생성
 		JButton LogInButton = new JButton();
 		LogInButton.setBounds(35, 274, 201, 42);
@@ -171,7 +179,7 @@ public class App {
 			public void actionPerformed(ActionEvent e) {
 				// DB Class 생성자 호출 시 이용자가 입력한 ID, Password를 매개변수로 대입
 				// isMatch() 메서드에서 boolean값을 리턴받음
-				DB inputData = new DB(inputId.getText(), String.valueOf(inputPassword.getPassword()));
+				DB inputData = new DB(inputIdSignIn.getText(), String.valueOf(inputPasswordSignIn.getPassword()));
 				if (inputData.isMatch()) {
 					JOptionPane.showMessageDialog(null, "You have logged in successfully");
 					
@@ -193,13 +201,185 @@ public class App {
 		JButton FindAccountButton = new JButton();
 		FindAccountButton.setBounds(46, 336, 178, 16);
 		FindAccountButton.setBorderPainted(false);
-		FindAccountButton
-				.setIcon(new ImageIcon("./image/FindAccountBefore.png"));
-		FindAccountButton.setPressedIcon(
-				new ImageIcon("./image/FindAccountAfter.png"));
+		FindAccountButton.setIcon(new ImageIcon("./image/FindAccountBefore.png"));
+		FindAccountButton.setPressedIcon(new ImageIcon("./image/FindAccountAfter.png"));
+		FindAccountButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				signInPanel.setVisible(false);
+				RightPanel(viewFindAccount());
+			}
+		});
 		signInFormPanel.add(FindAccountButton);
 		
 		return signInPanel;
+	}
+	
+	
+	// 계정찾기 화면
+	public JPanel viewFindAccount() {
+		
+		// 계정찾기 패널 생성
+		JPanel findAccountPanel = new JPanel(); 
+		findAccountPanel.setBounds(193, 23, 1073, 660);
+		findAccountPanel.setLayout(null);
+		
+		// findIdFormPanel 이미지 생성
+		ImagePanel findIdFormPanel = new ImagePanel(
+				new ImageIcon("./image/FindIdForm.png").getImage());
+		findIdFormPanel.setBounds(270, 233, 537, 264);
+		findAccountPanel.add(findIdFormPanel);
+		findIdFormPanel.setLayout(null);
+		
+		JButton ConfirmIdButton = new JButton();
+		ConfirmIdButton.setIcon(new ImageIcon("./image/FindAccountButtonBefore.png"));
+		ConfirmIdButton.setPressedIcon(new ImageIcon("./image/FindAccountButtonAfter.png"));
+		ConfirmIdButton.setBounds(205, 171, 128, 45);
+		ConfirmIdButton.setBorderPainted(false);
+		ConfirmIdButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String userId = null;
+				DB search = new DB();
+				userId = search.findUserID(inputNameFindId.getText(), inputEmailFindId.getText());
+				if(userId == null) {
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해 주세요");
+				}else {
+					JOptionPane.showMessageDialog(null, "아이디 확인: " + userId);
+				}			
+			}
+		});
+		findIdFormPanel.add(ConfirmIdButton);
+		
+		inputNameFindId = new JTextField();
+		inputNameFindId.setForeground(Color.DARK_GRAY);
+		inputNameFindId.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 16));
+		inputNameFindId.setBorder(null);
+		inputNameFindId.setText("회원가입 된 이름 ");
+		inputNameFindId.setBounds(200, 55, 224, 38);
+		inputNameFindId.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inputNameFindId.setDocument(new JTextFieldLimit(10));
+				inputNameFindId.setText("");
+			}
+		});
+		findIdFormPanel.add(inputNameFindId);
+		inputNameFindId.setColumns(10);
+		
+		inputEmailFindId = new JTextField();
+		inputEmailFindId.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 16));
+		inputEmailFindId.setBorder(null);
+		inputEmailFindId.setText("회원가입 된 이메일주소");
+		inputEmailFindId.setForeground(Color.DARK_GRAY);
+		inputEmailFindId.setColumns(10);
+		inputEmailFindId.setBounds(200, 109, 224, 38);
+		inputEmailFindId.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inputEmailFindId.setDocument(new JTextFieldLimit(20));
+				inputEmailFindId.setText("");
+			}
+		});
+		findIdFormPanel.add(inputEmailFindId);
+		
+		
+		// findPasswordFormPanel 이미지 생성
+		ImagePanel findPasswordFormPanel = new ImagePanel(
+				new ImageIcon("./image/FindPasswordForm.png").getImage());
+		findPasswordFormPanel.setBounds(270, 233, 537, 264);
+		findAccountPanel.add(findPasswordFormPanel);
+		findPasswordFormPanel.setLayout(null);
+		
+		JButton ConfirmPasswordButton = new JButton();
+		ConfirmPasswordButton.setIcon(new ImageIcon("./image/FindAccountButtonBefore.png"));
+		ConfirmPasswordButton.setPressedIcon(new ImageIcon("./image/FindAccountButtonAfter.png"));
+		ConfirmPasswordButton.setBounds(205, 171, 128, 45);
+		ConfirmPasswordButton.setBorderPainted(false);
+		ConfirmPasswordButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String userPassword = null;
+				DB search = new DB();
+				userPassword = search.findUserPassword(inputIdFindPassword.getText(), inputEmailFindPassword.getText());
+				if(userPassword == null) {
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해 주세요");
+				}else {
+					JOptionPane.showMessageDialog(null, "비밀번호 확인: " + userPassword);
+				}			
+			}
+		});
+		findPasswordFormPanel.add(ConfirmPasswordButton);
+		
+		inputIdFindPassword = new JTextField();
+		inputIdFindPassword.setForeground(Color.DARK_GRAY);
+		inputIdFindPassword.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 16));
+		inputIdFindPassword.setBorder(null);
+		inputIdFindPassword.setText("회원가입 된 아이디");
+		inputIdFindPassword.setBounds(200, 55, 224, 38);
+		inputIdFindPassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inputIdFindPassword.setDocument(new JTextFieldLimit(10));
+				inputIdFindPassword.setText("");
+			}
+		});
+		findPasswordFormPanel.add(inputIdFindPassword);
+		inputIdFindPassword.setColumns(10);
+		
+		inputEmailFindPassword = new JTextField();
+		inputEmailFindPassword.setFont(new Font("맑은 고딕", Font.BOLD | Font.ITALIC, 16));
+		inputEmailFindPassword.setBorder(null);
+		inputEmailFindPassword.setText("회원가입 된 이메일주소");
+		inputEmailFindPassword.setForeground(Color.DARK_GRAY);
+		inputEmailFindPassword.setColumns(10);
+		inputEmailFindPassword.setBounds(200, 109, 224, 38);
+		inputEmailFindPassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inputEmailFindPassword.setDocument(new JTextFieldLimit(20));
+				inputEmailFindPassword.setText("");
+			}
+		});
+		findPasswordFormPanel.add(inputEmailFindPassword);
+		
+		findPasswordFormPanel.setVisible(false);
+		
+
+		JButton FindIdButton = new JButton();
+		JButton FindPasswordButton = new JButton();
+		
+		FindIdButton.setIcon(new ImageIcon("./image/FindIdButtonAfter.png"));
+		FindIdButton.setBounds(272, 180, 266, 52);
+		FindIdButton.setBorderPainted(false);
+		FindIdButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				findPasswordFormPanel.setVisible(false);
+				findIdFormPanel.setVisible(true);
+				FindIdButton.setIcon(new ImageIcon("./image/FindIdButtonAfter.png"));
+				FindPasswordButton.setIcon(new ImageIcon("./image/FindPasswordButtonBefore.png"));
+				
+				inputIdFindPassword.setText("회원가입 된 아이디");
+				inputEmailFindPassword.setText("회원가입 된 이메일주소");
+			}
+		});
+		findAccountPanel.add(FindIdButton);
+		
+		
+		FindPasswordButton.setIcon(new ImageIcon("./image/FindPasswordButtonBefore.png"));
+		FindPasswordButton.setBounds(539, 180, 266, 52);
+		FindPasswordButton.setBorderPainted(false);
+		FindPasswordButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				findIdFormPanel.setVisible(false);
+				findPasswordFormPanel.setVisible(true);
+				FindPasswordButton.setIcon(new ImageIcon("./image/FindPasswordButtonAfter.png"));
+				FindIdButton.setIcon(new ImageIcon("./image/FindIdButtonBefore.png"));
+				
+				inputNameFindId.setText("회원가입 된 이름");
+				inputEmailFindId.setText("회원가입 된 이메일주소");
+			}
+		});
+		findAccountPanel.add(FindPasswordButton);
+
+		return findAccountPanel;
 	}
 
 	// 회원가입 화면
@@ -211,8 +391,7 @@ public class App {
 		signUpPanel.setLayout(null);
 
 		// signUpFormPanel 이미지 생성
-		ImagePanel signUpFormPanel = new ImagePanel(
-				new ImageIcon("./image/SignUpForm.png").getImage());
+		ImagePanel signUpFormPanel = new ImagePanel(new ImageIcon("./image/SignUpForm.png").getImage());
 		signUpFormPanel.setBounds(306, 5, 459, 647);
 		signUpPanel.add(signUpFormPanel);
 		signUpFormPanel.setLayout(null);
@@ -222,12 +401,9 @@ public class App {
 		SearchAddressButton.setBounds(340, 477, 22, 22);
 		SearchAddressButton.setBackground(SystemColor.control);
 		SearchAddressButton.setBorderPainted(false);
-		SearchAddressButton
-				.setIcon(new ImageIcon("./image/SearchButtonBefore.png"));
-		SearchAddressButton.setSelectedIcon(
-				new ImageIcon("./image/SearchButtonBefore.png"));
-		SearchAddressButton.setPressedIcon(
-				new ImageIcon("./image/SearchButtonAfter.png"));
+		SearchAddressButton.setIcon(new ImageIcon("./image/SearchButtonBefore.png"));
+		SearchAddressButton.setSelectedIcon(new ImageIcon("./image/SearchButtonBefore.png"));
+		SearchAddressButton.setPressedIcon(new ImageIcon("./image/SearchButtonAfter.png"));
 		SearchAddressButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("SearchAddressButton.. 시간 없으면 없앨 예정");
@@ -239,12 +415,9 @@ public class App {
 		JButton CreateAccountButton = new JButton();
 		CreateAccountButton.setBounds(138, 553, 200, 41);
 		CreateAccountButton.setBorderPainted(false);
-		CreateAccountButton.setIcon(
-				new ImageIcon("./image/CreateAccountButtonBefore.png"));
-		CreateAccountButton.setSelectedIcon(
-				new ImageIcon("./image/CreateAccountButtonBefore.png"));
-		CreateAccountButton.setPressedIcon(
-				new ImageIcon("./image/CreateAccountButtonAfter.png"));
+		CreateAccountButton.setIcon(new ImageIcon("./image/CreateAccountButtonBefore.png"));
+		CreateAccountButton.setSelectedIcon(new ImageIcon("./image/CreateAccountButtonBefore.png"));
+		CreateAccountButton.setPressedIcon(new ImageIcon("./image/CreateAccountButtonAfter.png"));
 		CreateAccountButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("CreateAccountButton");
@@ -445,5 +618,4 @@ public class App {
 		
 		return emailAuthPanel;
 	}
-
 }
