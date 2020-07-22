@@ -76,7 +76,9 @@ public class DB {
 	
 	// 회원가입 시 중복데이터 검사 [구현 예정]
 	public boolean hasDB() {
+		Validation check = new Validation();
 		
+		// db에 있으면 true, 없으면 false
 		return false;
 	}
 	
