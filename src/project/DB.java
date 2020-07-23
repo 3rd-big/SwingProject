@@ -28,8 +28,7 @@ public class DB {
 	}
 
 	// SignUp 생성자
-	public DB(String inputName, String inputId, String inputPassword, String inputEmail, String inputPhone,
-			String inputAddress) {
+	public DB(String inputName, String inputId, String inputPassword, String inputEmail, String inputPhone, String inputAddress) {
 		this.inputName = inputName;
 		this.inputId = inputId;
 		this.inputPassword = inputPassword;
@@ -76,10 +75,33 @@ public class DB {
 	
 	// 회원가입 시 중복데이터 검사 [구현 예정]
 	public boolean hasDB() {
-		Validation check = new Validation();
+		String hasDataQuery = "select count(*) from tb_user_info where s_user_id = '" + inputId + "' "
+				+ "or s_user_email = '" + inputEmail + "' or s_user_phone = '" + inputPhone + "'";
+		int hasDataCount = 0;
 		
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(hasDataQuery);) {
+			while (rs.next()) {
+				hasDataCount = Integer.parseInt(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		
+		if(hasDataCount >= 1) {
+			return true;
+		}else {
+			return false;
+		}
 		// db에 있으면 true, 없으면 false
-		return false;
+		
 	}
 	
 	public boolean isMatch() {

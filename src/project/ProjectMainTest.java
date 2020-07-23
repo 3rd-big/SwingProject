@@ -99,6 +99,10 @@ public class ProjectMainTest extends JFrame {
 		contentPane.add(currentRightPanel);
 	}
 
+	registertestpage SeonjeongRegisterPanel = new registertestpage();
+	boardtestpage SenjeongBoardPanel = new boardtestpage();
+	
+	
 	ProjectMainTest() {
 
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	[삭제]
@@ -122,6 +126,17 @@ public class ProjectMainTest extends JFrame {
 		BrandColumn.setBounds(0, 32, 185, 76);
 		BrandColumn.setFocusPainted(false);
 		BrandColumn.setBorderPainted(false);
+		BrandColumn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+
+
+				currentRightPanel.setVisible(false);
+				//registertestpage SeonjeongRegisterPanel = new registertestpage();
+				RightPanel(FirstPanel());
+			}
+		}); // 여기까지
+		
 		navPanel.add(BrandColumn);
 
 		JButton column1 = new JButton("Project Register");
@@ -136,8 +151,9 @@ public class ProjectMainTest extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				System.out.println("프로젝트 등록 버튼");
-				Main_contentPanel.setVisible(false);
-				registertestpage SeonjeongRegisterPanel = new registertestpage();
+
+				currentRightPanel.setVisible(false);
+				//registertestpage SeonjeongRegisterPanel = new registertestpage();
 				RightPanel(SeonjeongRegisterPanel.viewRegister());
 			}
 		}); // 여기까지
@@ -150,6 +166,20 @@ public class ProjectMainTest extends JFrame {
 		column2.setBorderPainted(false);
 		column2.setBackground(new Color(85, 65, 118));
 		column2.setBounds(0, 224, 185, 44);
+		// [2차 추가]
+		column2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println("review 버튼");
+
+				
+				
+				currentRightPanel.setVisible(false);
+				//boardtestpage SenjeongBoardPanel = new boardtestpage();
+				RightPanel(SenjeongBoardPanel.viewBoard());
+				
+			}
+		}); // 여기까지
 		navPanel.add(column2);
 
 		JButton column3 = new JButton("My page");
@@ -161,6 +191,39 @@ public class ProjectMainTest extends JFrame {
 		column3.setBounds(0, 292, 185, 44);
 		navPanel.add(column3);
 
+//		Main_contentPanel = new JPanel();
+//		Main_contentPanel.setBounds(193, 23, 1073, 660);
+//		contentPane.add(Main_contentPanel);
+//		Main_contentPanel.setLayout(null);
+//
+//		JPanel headerPanel = new JPanel();
+//		headerPanel.setBackground(new Color(110, 89, 222));
+//		headerPanel.setBounds(0, 31, 1073, 79);
+//		Main_contentPanel.add(headerPanel);
+//		headerPanel.setLayout(null);
+//
+//		JLabel hederText = new JLabel("Project");
+//		hederText.setBounds(40, 10, 193, 57);
+//		hederText.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+//		hederText.setForeground(Color.WHITE);
+//		headerPanel.add(hederText);
+//
+//		FileOutputStream fos;
+//
+////      JPanel ptablepanel = new JPanel();
+////      ptablepanel.setBounds(12, 156, 1049, 494);
+////      Main_contentPanel.add(ptablepanel);
+////      ptablepanel.setLayout(null);
+//
+//		///
+//
+//		tableView();
+
+		RightPanel(FirstPanel());
+		
+	}
+	
+	public JPanel FirstPanel() {
 		Main_contentPanel = new JPanel();
 		Main_contentPanel.setBounds(193, 23, 1073, 660);
 		contentPane.add(Main_contentPanel);
@@ -188,8 +251,10 @@ public class ProjectMainTest extends JFrame {
 		///
 
 		tableView();
-
+		
+		return Main_contentPanel;
 	}
+	
 
 	static void tableView() {
 		JPanel tableicon1 = new JPanel();
