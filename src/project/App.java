@@ -423,17 +423,25 @@ public class App {
 				System.out.println("CreateAccountButton");
 				DB data = new DB(inputNameSignUp.getText(), inputIdSignUp.getText(), inputPasswordSignUp.getText(),
 						inputEmailSignUp.getText(), inputPhoneSignUp.getText(), inputAddressSignUp.getText());
-				if (data.hasDB() == false) {
-					try {
-						data.inputUserData();
-						signUpPanel.setVisible(false);
-						RightPanel(viewEmailAuth());
-					} catch (Exception e1) {
-						e1.getMessage();
+				EmailRegex regexCheck = new EmailRegex(inputEmailSignUp.getText());
+				
+				if(regexCheck.isCorrectRegex()) {
+					if (data.hasDB() == false) {
+						try {
+							data.inputUserData();
+							signUpPanel.setVisible(false);
+							RightPanel(viewEmailAuth());
+						} catch (Exception e1) {
+							e1.getMessage();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "기존 회원정보가 있습니다");
 					}
-				} else {
-					JOptionPane.showMessageDialog(null, "기존 회원정보가 있습니다");
+				}else {
+					JOptionPane.showMessageDialog(null, "이메일을 올바르게 입력하세요");
 				}
+				
+
 
 			}
 		});
